@@ -1,0 +1,20 @@
+{
+  "pageDetails": {
+    "total": 1,
+    "page": 1,
+    "pageSize": 250
+  },
+  "devices": [
+    {
+      "id": 1,
+      "uid": "device-uid-1",
+      "siteId": 100,
+      "siteUid": "site-uid-1",
+      "siteName": "Main Site",
+      "deviceType": "Server",
+      "hostname": "server1",
+      "operatingSystem": "Windows Server 2019",
+      "lastSeen": "2024-07-16T12:00:00Z"
+    }
+  ]
+}
