@@ -1,18 +1,28 @@
 {
-  "name": "dattormmrestapi",
-  "version": "1.0.0",
+  "name": "datto-rmm-api-client",
+  "version": "0.1.0",
   "description": "ESM-only server-side TypeScript client for Datto RMM API v2",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest",
-    "build": "tsc"
+    "build": "tsc",
+    "clean": "if exist dist rmdir /s /q dist",
+    "prepublishOnly": "npm run clean && npm run build",
+    "publish": "npm publish --access public .\\dist"
   },
   "keywords": [],
   "author": "Rob Gilbreath",
   "license": "MIT",
   "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "axios": "^1.10.0",
+    "prettier": "^3.6.2",
     "zod": "^4.0.5"
   },
   "devDependencies": {
