@@ -7,6 +7,9 @@ export default {
       useESM: true,
     },
   },
+  moduleNameMapper: {
+    "^(\\.{1,2}/.*)\\.js$": "$1",
+  },
   transformIgnorePatterns: ["/node_modules/(?!axios)/"],
   testPathIgnorePatterns: ["/dist/"],
 };
