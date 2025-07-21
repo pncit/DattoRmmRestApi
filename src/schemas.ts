@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const DevicesTypeSchema = z.object({
   category: z.string().optional(),
@@ -8,13 +8,25 @@ export const DevicesTypeSchema = z.object({
 export const AntivirusSchema = z.object({
   antivirusProduct: z.string().optional(),
   antivirusStatus: z
-    .enum(['RunningAndUpToDate', 'RunningAndNotUpToDate', 'NotRunning', 'NotDetected'])
+    .enum([
+      "RunningAndUpToDate",
+      "RunningAndNotUpToDate",
+      "NotRunning",
+      "NotDetected",
+    ])
     .optional(),
 });
 
 export const PatchManagementSchema = z.object({
   patchStatus: z
-    .enum(['NoPolicy', 'NoData', 'RebootRequired', 'InstallError', 'ApprovedPending', 'FullyPatched'])
+    .enum([
+      "NoPolicy",
+      "NoData",
+      "RebootRequired",
+      "InstallError",
+      "ApprovedPending",
+      "FullyPatched",
+    ])
     .optional(),
   patchesApprovedPending: z.number().optional(),
   patchesNotApproved: z.number().optional(),
@@ -23,8 +35,11 @@ export const PatchManagementSchema = z.object({
 
 export const UdfSchema = z.object(
   Object.fromEntries(
-    Array.from({ length: 30 }, (_, i) => [`udf${i + 1}`, z.string().optional()])
-  )
+    Array.from({ length: 30 }, (_, i) => [
+      `udf${i + 1}`,
+      z.string().optional(),
+    ]),
+  ),
 );
 
 export const DeviceSchema = z.object({
@@ -54,7 +69,7 @@ export const DeviceSchema = z.object({
   creationDate: z.string().datetime().optional(),
   udf: UdfSchema.optional(),
   snmpEnabled: z.boolean().optional(),
-  deviceClass: z.enum(['device', 'printer', 'esxihost', 'unknown']).optional(),
+  deviceClass: z.enum(["device", "printer", "esxihost", "unknown"]).optional(),
   portalUrl: z.string().optional(),
   warrantyDate: z.string().optional(),
   antivirus: AntivirusSchema.optional(),

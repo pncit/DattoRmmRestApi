@@ -1,7 +1,7 @@
-import { HttpClient } from './httpClient';
-import { TokenInfo, InMemoryTokenStore } from './tokenStore';
-import { DattoRmmClientConfig } from './config';
-import { Result } from './result';
+import { HttpClient } from "./httpClient";
+import { TokenInfo, InMemoryTokenStore } from "./tokenStore";
+import { DattoRmmClientConfig } from "./config";
+import { Result } from "./result";
 
 interface TokenResponse {
   access_token: string;
@@ -12,7 +12,10 @@ interface TokenResponse {
 export class AuthManager {
   private store = new InMemoryTokenStore();
 
-  constructor(private http: HttpClient, private config: DattoRmmClientConfig) {}
+  constructor(
+    private http: HttpClient,
+    private config: DattoRmmClientConfig,
+  ) {}
 
   async getToken(): Promise<Result<TokenInfo>> {
     const existing = this.store.get();
@@ -25,10 +28,12 @@ export class AuthManager {
 
   async refreshToken(): Promise<Result<TokenInfo>> {
     const url = `${this.config.apiUrl}/auth/oauth/token`;
-    const basic = Buffer.from(`${this.config.apiKey}:${this.config.apiSecret}`).toString('base64');
-    const data = new URLSearchParams({ grant_type: 'client_credentials' });
+    const basic = Buffer.from(
+      `${this.config.apiKey}:${this.config.apiSecret}`,
+    ).toString("base64");
+    const data = new URLSearchParams({ grant_type: "client_credentials" });
     const res = await this.http.request<TokenResponse>({
-      method: 'POST',
+      method: "POST",
       url,
       headers: { Authorization: `Basic ${basic}` },
       data,

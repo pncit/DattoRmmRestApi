@@ -1,3 +1,3 @@
-export * from './client';
-export * from './config';
-export * from './result';
+export * from "./client";
+export * from "./config";
+export * from "./result";

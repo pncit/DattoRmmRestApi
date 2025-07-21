@@ -1,11 +1,11 @@
-import { DattoRmmClientConfig } from './config';
-import { defaultLogger } from './logger';
-import { SlidingWindowRateLimiter } from './rateLimiter';
-import { HttpClient } from './httpClient';
-import { AuthManager } from './auth';
-import { validate, ValidationMode } from './validation';
-import { DevicesPageSchema, DevicesPage } from './schemas';
-import { Result } from './result';
+import { DattoRmmClientConfig } from "./config";
+import { defaultLogger } from "./logger";
+import { SlidingWindowRateLimiter } from "./rateLimiter";
+import { HttpClient } from "./httpClient";
+import { AuthManager } from "./auth";
+import { validate, ValidationMode } from "./validation";
+import { DevicesPageSchema, DevicesPage } from "./schemas";
+import { Result } from "./result";
 
 export class DattoRmmClient {
   private rateLimiter: SlidingWindowRateLimiter;
@@ -14,7 +14,7 @@ export class DattoRmmClient {
   private validationMode: ValidationMode;
 
   constructor(private config: DattoRmmClientConfig) {
-    this.validationMode = config.validationMode ?? 'strict';
+    this.validationMode = config.validationMode ?? "strict";
     this.rateLimiter = new SlidingWindowRateLimiter({
       requestsPerWindow: config.rateLimit?.requestsPerWindow ?? 600,
       windowSeconds: config.rateLimit?.windowSeconds ?? 60,
@@ -29,11 +29,13 @@ export class DattoRmmClient {
     this.auth = new AuthManager(this.http, config);
   }
 
-  async getAccountDevices(params?: Record<string, any>): Promise<Result<DevicesPage>> {
+  async getAccountDevices(
+    params?: Record<string, any>,
+  ): Promise<Result<DevicesPage>> {
     const tokenRes = await this.auth.getToken();
     if (!tokenRes.ok) return tokenRes as any;
     const res = await this.http.request<unknown>({
-      method: 'GET',
+      method: "GET",
       url: `${this.config.apiUrl}/api/v2/account/devices`,
       headers: { Authorization: `Bearer ${tokenRes.value.accessToken}` },
       params,
@@ -48,6 +50,8 @@ export class DattoRmmClient {
   }
 }
 
-export function createDattoRmmClient(config: DattoRmmClientConfig): DattoRmmClient {
+export function createDattoRmmClient(
+  config: DattoRmmClientConfig,
+): DattoRmmClient {
   return new DattoRmmClient(config);
 }

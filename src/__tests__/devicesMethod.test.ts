@@ -1,9 +1,9 @@
-import { createDattoRmmClient } from '../client';
-import * as fs from 'fs';
-import * as path from 'path';
+import { createDattoRmmClient } from "../client";
+import * as fs from "fs";
+import * as path from "path";
 
 const devicesPage = JSON.parse(
-  fs.readFileSync(path.join(__dirname, 'fixtures/devicesPage.json'), 'utf-8')
+  fs.readFileSync(path.join(__dirname, "fixtures/devicesPage.json"), "utf-8"),
 );
 
 class MockAxios {
@@ -19,28 +19,30 @@ class MockAxios {
   }
 }
 
-test('getAccountDevices returns validated data', async () => {
+test("getAccountDevices returns validated data", async () => {
   const responses = {
-    'https://example.com/auth/oauth/token': {
-      access_token: 'token',
-      refresh_token: 'r',
-      expires_in: 3600
+    "https://example.com/auth/oauth/token": {
+      access_token: "token",
+      refresh_token: "r",
+      expires_in: 3600,
     },
-    'https://example.com/api/v2/account/devices': devicesPage
+    "https://example.com/api/v2/account/devices": devicesPage,
   };
   const mockAxios = new MockAxios(responses) as any;
 
   const client = createDattoRmmClient({
-    apiUrl: 'https://example.com',
-    apiKey: 'k',
-    apiSecret: 's',
-    axiosInstance: mockAxios
+    apiUrl: "https://example.com",
+    apiKey: "k",
+    apiSecret: "s",
+    axiosInstance: mockAxios,
   });
 
   const result = await client.getAccountDevices();
   expect(result.ok).toBe(true);
   const page = (result as any).value;
   expect(page.devices?.length).toBe(1);
-  expect(page.devices?.[0].hostname).toBe('server1');
-  expect(page.devices?.[0].antivirus?.antivirusStatus).toBe('RunningAndUpToDate');
+  expect(page.devices?.[0].hostname).toBe("server1");
+  expect(page.devices?.[0].antivirus?.antivirusStatus).toBe(
+    "RunningAndUpToDate",
+  );
 });
