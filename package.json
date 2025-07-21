@@ -1,0 +1,24 @@
+{
+  "name": "dattormmrestapi",
+  "version": "1.0.0",
+  "description": "ESM-only server-side TypeScript client for Datto RMM API v2",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "Rob Gilbreath",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "axios": "^1.10.0",
+    "zod": "^4.0.5"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.0.4",
+    "ts-jest": "^29.4.0",
+    "typescript": "^5.8.3"
+  }
+}
