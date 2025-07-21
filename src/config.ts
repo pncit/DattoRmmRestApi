@@ -1,8 +1,8 @@
 import type { AxiosInstance } from "axios";
-import type { LoggerLike } from "./logger";
-import type { RateLimitOptions } from "./rateLimiter";
-import type { RetryOptions } from "./httpClient";
-import type { ValidationMode } from "./validation";
+import type { LoggerLike } from "./logger.js";
+import type { RateLimitOptions } from "./rateLimiter.js";
+import type { RetryOptions } from "./httpClient.js";
+import type { ValidationMode } from "./validation.js";
 
 export interface DattoRmmClientConfig {
   apiUrl: string;

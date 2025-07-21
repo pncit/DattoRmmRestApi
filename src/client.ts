@@ -1,11 +1,11 @@
-import { DattoRmmClientConfig } from "./config";
-import { defaultLogger } from "./logger";
-import { SlidingWindowRateLimiter } from "./rateLimiter";
-import { HttpClient } from "./httpClient";
-import { AuthManager } from "./auth";
-import { validate, ValidationMode } from "./validation";
-import { DevicesPageSchema, DevicesPage } from "./schemas";
-import { Result } from "./result";
+import { DattoRmmClientConfig } from "./config.js";
+import { defaultLogger } from "./logger.js";
+import { SlidingWindowRateLimiter } from "./rateLimiter.js";
+import { HttpClient } from "./httpClient.js";
+import { AuthManager } from "./auth.js";
+import { validate, ValidationMode } from "./validation.js";
+import { DevicesPageSchema, DevicesPage } from "./schemas.js";
+import { Result } from "./result.js";
 
 export class DattoRmmClient {
   private rateLimiter: SlidingWindowRateLimiter;

@@ -1,7 +1,7 @@
-import { HttpClient } from "./httpClient";
-import { TokenInfo, InMemoryTokenStore } from "./tokenStore";
-import { DattoRmmClientConfig } from "./config";
-import { Result } from "./result";
+import { HttpClient } from "./httpClient.js";
+import { TokenInfo, InMemoryTokenStore } from "./tokenStore.js";
+import { DattoRmmClientConfig } from "./config.js";
+import { Result } from "./result.js";
 
 interface TokenResponse {
   access_token: string;

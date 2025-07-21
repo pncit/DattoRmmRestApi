@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosError } from "axios";
-import { Result, ProblemError } from "./result";
-import { SlidingWindowRateLimiter, RateLimitOptions } from "./rateLimiter";
-import { LoggerLike } from "./logger";
+import { Result, ProblemError } from "./result.js";
+import { SlidingWindowRateLimiter, RateLimitOptions } from "./rateLimiter.js";
+import { LoggerLike } from "./logger.js";
 
 export interface RetryOptions {
   maxAttempts: number;

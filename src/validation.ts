@@ -1,9 +1,9 @@
-import { z, ZodSchema } from "zod";
+import { z, ZodType } from "zod/v4";
 
 export type ValidationMode = "strict" | "warn" | "off";
 
 export function validate<T>(
-  schema: ZodSchema<T>,
+  schema: ZodType<T>,
   data: unknown,
   mode: ValidationMode,
 ): T {
