@@ -4,7 +4,8 @@ import { SlidingWindowRateLimiter } from "./rateLimiter.js";
 import { HttpClient } from "./httpClient.js";
 import { AuthManager } from "./auth.js";
 import { validate, ValidationMode } from "./validation.js";
-import { DevicesPageSchema, DevicesPage } from "./schemas.js";
+import { DevicesPageSchema, DevicesPage, Device } from "./schemas.js";
+import { ZodType } from "zod/v4";
 import { Result } from "./result.js";
 
 export class DattoRmmClient {
@@ -29,20 +30,44 @@ export class DattoRmmClient {
     this.auth = new AuthManager(this.http, config);
   }
 
+  private async fetchAllPages<T, P>(
+    url: string,
+    token: string,
+    params: Record<string, any> | undefined,
+    schema: ZodType<P>,
+    extractor: (page: P) => T[],
+  ): Promise<Result<T[]>> {
+    let nextUrl: string | undefined = url;
+    let nextParams: Record<string, any> | undefined = params;
+    const items: T[] = [];
+    while (nextUrl) {
+      const res: Result<unknown> = await this.http.request<unknown>({
+        method: "GET",
+        url: nextUrl,
+        headers: { Authorization: `Bearer ${token}` },
+        params: nextParams,
+      });
+      if (!res.ok) return res as any;
+      const data: P = validate(schema, res.value, this.validationMode);
+      items.push(...extractor(data));
+      nextUrl = (data as any).pageDetails?.nextPageUrl || "";
+      nextParams = undefined;
+    }
+    return { ok: true, value: items };
+  }
+
   async getAccountDevices(
     params?: Record<string, any>,
-  ): Promise<Result<DevicesPage>> {
+  ): Promise<Result<Device[]>> {
     const tokenRes = await this.auth.getToken();
     if (!tokenRes.ok) return tokenRes as any;
-    const res = await this.http.request<unknown>({
-      method: "GET",
-      url: `${this.config.apiUrl}/api/v2/account/devices`,
-      headers: { Authorization: `Bearer ${tokenRes.value.accessToken}` },
+    return this.fetchAllPages<Device, DevicesPage>(
+      `${this.config.apiUrl}/api/v2/account/devices`,
+      tokenRes.value.accessToken,
       params,
-    });
-    if (!res.ok) return res as any;
-    const data = validate(DevicesPageSchema, res.value, this.validationMode);
-    return { ok: true, value: data, raw: res.raw };
+      DevicesPageSchema,
+      (p) => p.devices ?? [],
+    );
   }
 
   invalidateToken() {
