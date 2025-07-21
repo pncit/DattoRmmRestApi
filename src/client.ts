@@ -30,7 +30,10 @@ export class DattoRmmClient {
     this.auth = new AuthManager(this.http, config);
   }
 
-  private async fetchAllPages<T, P extends { pageDetails?: { nextPageUrl?: string } },>(
+  private async fetchAllPages<
+    T,
+    P extends { pageDetails?: { nextPageUrl?: string } },
+  >(
     url: string,
     token: string,
     params: Record<string, any> | undefined,
