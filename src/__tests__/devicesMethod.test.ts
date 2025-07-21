@@ -42,4 +42,5 @@ test('getAccountDevices returns validated data', async () => {
   const page = (result as any).value;
   expect(page.devices?.length).toBe(1);
   expect(page.devices?.[0].hostname).toBe('server1');
+  expect(page.devices?.[0].antivirus?.antivirusStatus).toBe('RunningAndUpToDate');
 });

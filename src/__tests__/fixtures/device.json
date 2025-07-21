@@ -4,8 +4,45 @@
   "siteId": 100,
   "siteUid": "site-uid-1",
   "siteName": "Main Site",
-  "deviceType": "Server",
+  "deviceType": {
+    "category": "server",
+    "type": "physical"
+  },
   "hostname": "server1",
+  "intIpAddress": "192.168.1.10",
   "operatingSystem": "Windows Server 2019",
-  "lastSeen": "2024-07-16T12:00:00Z"
+  "lastLoggedInUser": "admin",
+  "domain": "example.local",
+  "cagVersion": "10.1.0",
+  "displayVersion": "10.1.0.1234",
+  "extIpAddress": "203.0.113.5",
+  "description": "Primary server",
+  "a64Bit": true,
+  "rebootRequired": false,
+  "online": true,
+  "suspended": false,
+  "deleted": false,
+  "lastSeen": "2024-07-16T12:00:00Z",
+  "lastReboot": "2024-07-15T06:00:00Z",
+  "lastAuditDate": "2024-07-15T06:05:00Z",
+  "creationDate": "2024-01-01T00:00:00Z",
+  "udf": {
+    "udf1": "value1"
+  },
+  "snmpEnabled": false,
+  "deviceClass": "device",
+  "portalUrl": "https://rmm.datto.com/devices/1",
+  "warrantyDate": "2026-01-01",
+  "antivirus": {
+    "antivirusProduct": "Windows Defender",
+    "antivirusStatus": "RunningAndUpToDate"
+  },
+  "patchManagement": {
+    "patchStatus": "FullyPatched",
+    "patchesApprovedPending": 0,
+    "patchesNotApproved": 0,
+    "patchesInstalled": 100
+  },
+  "softwareStatus": "OK",
+  "webRemoteUrl": "https://webremote.datto.com/connect/1"
 }
