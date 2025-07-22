@@ -5,7 +5,7 @@ import { HttpClient } from "./httpClient.js";
 import { AuthManager } from "./auth.js";
 import { validate, ValidationMode } from "./validation.js";
 import { DevicesPageSchema, DevicesPage, Device } from "./schemas.js";
-import { ZodType } from "zod/v4";
+import { ZodError, ZodType } from "zod/v4";
 import { Result } from "./result.js";
 
 export class DattoRmmClient {
@@ -30,9 +30,9 @@ export class DattoRmmClient {
     this.auth = new AuthManager(this.http, config);
   }
 
-  private async fetchAllPages<
+  private async getAllPages<
     T,
-    P extends { pageDetails?: { nextPageUrl?: string } },
+    P extends { pageDetails?: { nextPageUrl: string | null } },
   >(
     url: string,
     token: string,
@@ -40,8 +40,8 @@ export class DattoRmmClient {
     schema: ZodType<P>,
     extractor: (page: P) => T[],
   ): Promise<Result<T[]>> {
-    let nextUrl: string | undefined = url;
-    let nextParams: Record<string, any> | undefined = params;
+    let nextUrl: string | null | undefined = url;
+    let nextParams = params;
     const items: T[] = [];
     while (nextUrl) {
       const res: Result<unknown> = await this.http.request<unknown>({
@@ -50,10 +50,18 @@ export class DattoRmmClient {
         headers: { Authorization: `Bearer ${token}` },
         params: nextParams,
       });
-      if (!res.ok) return res as any;
-      const data: P = validate(schema, res.value, this.validationMode);
+      if (!res.ok) return res; // axios error already handled
+      let data: P;
+      try {
+        data = validate(schema, res.value, this.validationMode);
+      } catch (e) {
+        if (e instanceof ZodError) {
+          return { ok: false, error: { type: "validation-error", title: e.message, status: 400, raw: e } };
+        }
+        return { ok: false, error: { type: "unknown-error", title: String(e), status: 500, raw: e } };
+      }
       items.push(...extractor(data));
-      nextUrl = (data as any).pageDetails?.nextPageUrl || "";
+      nextUrl = data.pageDetails?.nextPageUrl;
       nextParams = undefined;
     }
     return { ok: true, value: items };
@@ -64,7 +72,7 @@ export class DattoRmmClient {
   ): Promise<Result<Device[]>> {
     const tokenRes = await this.auth.getToken();
     if (!tokenRes.ok) return tokenRes as any;
-    return this.fetchAllPages<Device, DevicesPage>(
+    return this.getAllPages<Device, DevicesPage>(
       `${this.config.apiUrl}/api/v2/account/devices`,
       tokenRes.value.accessToken,
       params,

@@ -11,13 +11,16 @@ export function validate<T>(
     return data as T;
   }
   const result = schema.safeParse(data);
-  if (!result.success) {
-    if (mode === "strict") {
-      throw result.error;
-    } else {
-      console.warn(result.error);
-      return data as T;
-    }
+  if (result.success) {
+    return result.data;
   }
-  return result.data;
+  switch (mode) {
+    case "strict":
+      throw result.error;
+    case "warn":
+      console.warn(`Validation warning: ${result.error.message}`);
+      return data as T;
+    default:
+      throw new Error(`Unknown validation mode: ${mode}`);
+  }
 }

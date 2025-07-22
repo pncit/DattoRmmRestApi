@@ -106,8 +106,8 @@ export type Device = z.infer<typeof DeviceSchema>;
 export const PaginationDataSchema = z.object({
   count: z.number().optional(),
   totalCount: z.number().optional(),
-  prevPageUrl: z.string().optional(),
-  nextPageUrl: z.string().optional(),
+  prevPageUrl: z.string().or(z.null()),
+  nextPageUrl: z.string().or(z.null()),
 });
 
 export const DevicesPageSchema = z.object({
