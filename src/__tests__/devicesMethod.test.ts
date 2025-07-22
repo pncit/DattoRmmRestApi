@@ -29,7 +29,6 @@ test("getAccountDevices returns validated data", async () => {
   const responses = {
     "https://example.com/auth/oauth/token": {
       access_token: "token",
-      refresh_token: "r",
       expires_in: 3600,
     },
     "https://example.com/api/v2/account/devices": devicesPage,
@@ -55,7 +54,6 @@ test("getAccountDevices paginates automatically", async () => {
   const responses = {
     "https://example.com/auth/oauth/token": {
       access_token: "token",
-      refresh_token: "r",
       expires_in: 3600,
     },
     "https://example.com/api/v2/account/devices": devicesPage1,

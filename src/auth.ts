@@ -5,7 +5,6 @@ import { Result } from "./result.js";
 
 interface TokenResponse {
   access_token: string;
-  refresh_token: string;
   expires_in: number; // seconds
 }
 
@@ -28,20 +27,26 @@ export class AuthManager {
 
   async refreshToken(): Promise<Result<TokenInfo>> {
     const url = `${this.config.apiUrl}/auth/oauth/token`;
-    const basic = Buffer.from(
-      `${this.config.apiKey}:${this.config.apiSecret}`,
-    ).toString("base64");
-    const data = new URLSearchParams({ grant_type: "client_credentials" });
+    const data = new URLSearchParams({
+        grant_type: "password",
+        username: this.config.apiKey,
+        password: this.config.apiSecret,
+      });
     const res = await this.http.request<TokenResponse>({
       method: "POST",
       url,
-      headers: { Authorization: `Basic ${basic}` },
-      data,
+      auth: {
+        username: "public-client",
+        password: "public",
+      },
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      data: data.toString(),
     });
     if (!res.ok) return res as any;
     const info: TokenInfo = {
       accessToken: res.value.access_token,
-      refreshToken: res.value.refresh_token,
       expiresAt: Date.now() + res.value.expires_in * 1000,
     };
     this.store.set(info);
