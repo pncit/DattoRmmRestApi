@@ -4,7 +4,7 @@ import { SlidingWindowRateLimiter } from "./rateLimiter.js";
 import { HttpClient } from "./httpClient.js";
 import { AuthManager } from "./auth.js";
 import { validate, ValidationMode } from "./validation.js";
-import { DevicesPageSchema, DevicesPage, Device } from "./schemas.js";
+import { DevicesPageSchema, DevicesPage, Device, DeviceSchema } from "./schemas.js";
 import { ZodError, ZodType } from "zod/v4";
 import { Result } from "./result.js";
 
@@ -79,6 +79,27 @@ export class DattoRmmClient {
       DevicesPageSchema,
       (p) => p.devices ?? [],
     );
+  }
+
+  async getDeviceByUid(
+    deviceUid: string,
+  ): Promise<Result<Device>> {
+    const tokenRes = await this.auth.getToken();
+    if (!tokenRes.ok) return tokenRes as any;
+    const res = await this.http.request<Device>({
+      method: "GET",
+      url: `${this.config.apiUrl}/api/v2/device/${deviceUid}`,
+      headers: { Authorization: `Bearer ${tokenRes.value.accessToken}` },
+    });
+    if (!res.ok) return res; // axios error already handled
+    try {
+      return { ok: true, value: validate(DeviceSchema, res.value, this.validationMode) };
+    } catch (e) {
+      if (e instanceof ZodError) {
+        return { ok: false, error: { type: "validation-error", title: e.message, status: 400, raw: e } };
+      }
+      return { ok: false, error: { type: "unknown-error", title: String(e), status: 500, raw: e } };
+    }
   }
 
   async updateDeviceUdfs(
