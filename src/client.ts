@@ -81,6 +81,21 @@ export class DattoRmmClient {
     );
   }
 
+  async updateDeviceUdfs(
+    deviceUid: string,
+    udf: Partial<Device['udf']>,
+  ): Promise<Result<void>> {
+    const tokenRes = await this.auth.getToken();
+    if (!tokenRes.ok) return tokenRes as any;
+    const res = await this.http.request<void>({
+      method: "PATCH",
+      url: `${this.config.apiUrl}/api/v2/account/devices/${deviceUid}/udf`,
+      headers: { Authorization: `Bearer ${tokenRes.value.accessToken}` },
+      data: udf,
+    });
+    return res;
+  }
+
   invalidateToken() {
     this.auth.invalidate();
   }
